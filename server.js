@@ -46,7 +46,10 @@ app.post('/webhook', (req, res) => {
     console.log(`New user created: ${userId}`);
   }
 
-  res.status(200).json({ message: "Webhook received" });
+  res.status(200).json({
+    "message": "Webhook received",
+    "data": req.body
+  });
 });
 
 

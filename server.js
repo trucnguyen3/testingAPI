@@ -28,6 +28,8 @@ function authenticateToken(req, res, next) {
 
 let data = {}
 
+let webhookStore = [];
+
 app.get('/api/data', authenticateToken, (req, res) => {
   res.json({
     success: true,
@@ -36,20 +38,18 @@ app.get('/api/data', authenticateToken, (req, res) => {
 });
 
 app.post('/webhook', (req, res) => {
-  console.log("Webhook received:");
-  console.log(req.body);
+  console.log("Webhook received:", req.body);
 
-  // Example: handle event
-  const { event, userId } = req.body;
-
-  if (event === "USER_CREATED") {
-    console.log(`New user created: ${userId}`);
-  }
-
-  res.status(200).json({
-    "message": "Webhook received",
-    "data": req.body
+  webhookStore.push({
+    data: req.body,
+    time: Date.now()
   });
+
+  res.sendStatus(200);
+});
+
+app.get("/webhook-data", (req, res) => {
+  res.json(webhookStore.data);
 });
 
 
